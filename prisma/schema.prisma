@@ -19,6 +19,7 @@ model User {
   password String
   createdAt DateTime @default(now())
 }
+
 model Pedido {
   id_pedido Int @id @default(autoincrement())
   
@@ -85,4 +86,13 @@ model Metodo_Pago {
   tipo String
 
   Pago Pago[]
+=======
+
+model Producto {
+  id Int  @id @default(autoincrement())
+  nombre String
+  descripcion String
+  precio Float
+  stock Int
+  createAt DateTime @default(now())
 }
