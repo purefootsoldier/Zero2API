@@ -26,5 +26,7 @@ model Producto {
   descripcion String
   precio Float
   stock Int
+  cantidad Int @default(0)
++ @@check(cantidad >= 0)
   createAt DateTime @default(now())
 }
