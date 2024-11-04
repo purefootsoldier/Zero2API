@@ -76,7 +76,6 @@ model Reservas {
   confirmacion Boolean
 }
 
-
 model Clientes {
   id Int @id @default(autoincrement())
   nombre String
@@ -89,6 +88,15 @@ model Permisos {
   id Int @id @default(autoincrement())
   nombre String
   descripcion String
+}
+
+model Ticket {
+  id_ticket Int @id @default(autoincrement())
+  id_pedido Int 
+  pedido Pedido @relation(fields: [id_pedido], references: [id_pedido] )
+  id_metodo_pago Int
+  metododo_pago Metodo_Pago @relation(fields: [id_metodo_pago], references: [id_metodo_pago])
+  total Float
 }
 
 model Ticket {
