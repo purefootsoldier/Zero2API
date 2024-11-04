@@ -17,6 +17,7 @@ export default async function handler(
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
@@ -31,6 +32,7 @@ export default async function handler(
         const user = await prisma.user.findUnique({
             where: {username},
         });
+        console.log(user)
 
         if (!user){
             
@@ -38,8 +40,6 @@ export default async function handler(
         }
 
         const isPasswordValid = await bcypt.compare(password, user.password);
-
-        console.log("sss", isPasswordValid)
 
         if (!isPasswordValid){
             return res.status(401).json({error:'Contraseña incorrecta'});

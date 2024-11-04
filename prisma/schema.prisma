@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlserver"
   url      = env("DATABASE_URL")
 }
 
@@ -19,6 +19,74 @@ model User {
   password String
   createdAt DateTime @default(now())
 }
+
+model Pedido {
+  id_pedido Int @id @default(autoincrement())
+  
+
+  id_mesa Int
+  id_clientes Int
+  fecha DateTime
+  total Float
+  id_empleado Int
+  tipo_pedido String
+  Ticket Ticket[]
+  DetallePedido DetallePedido[]
+
+  Pago Pago[]
+}
+//Guayabo && Alex
+model Ticket {
+  id_ticket Int @id @default(autoincrement())
+
+  id_pedido Int 
+  pedido Pedido @relation(fields: [id_pedido], references: [id_pedido] )
+
+  id_metodo_pago Int
+  metododo_pago Metodo_Pago @relation(fields: [id_metodo_pago], references: [id_metodo_pago])
+
+  total Float
+}
+
+//Diego y Nata
+model DetallePedido {
+  id_detalle_pedido Int @id @default(autoincrement())
+  id_pedido         Int
+  id_menu           Int
+  cantidad          Int
+  subtotal          Float
+
+  Pedido Pedido @relation(fields: [id_pedido], references: [id_pedido])
+  Menu    Menu    @relation(fields: [id_menu], references: [id_menu])
+
+}
+
+//Boston y Alek
+model Pago {
+    id             Int           @id @default(autoincrement())
+    pedido        Pedido       @relation(fields: [id_pedido], references: [id_pedido])
+    id_pedido      Int
+    metodo_pago    Metodo_Pago  @relation(fields: [id_metodo_pago], references: [id_metodo_pago])
+    id_metodo_pago Int
+    fecha_pago     DateTime      @default(now())
+    total          Float
+
+}
+
+model Menu {
+  id_menu Int @id @default(autoincrement())
+  DetallePedido DetallePedido[]
+}
+
+
+model Metodo_Pago {
+  id_metodo_pago Int @id @default(autoincrement())
+  Ticket Ticket[]
+  nombre String?
+  tipo String
+
+  Pago Pago[]
+=======
 
 model Producto {
   id Int  @id @default(autoincrement())
