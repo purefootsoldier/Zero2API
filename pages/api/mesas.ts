@@ -27,7 +27,7 @@ export default async function Mesas(
                 data: {
                     capacidad_mesa: parseInt(capacidad_mesa),
                     numero_mesa: parseInt(numero_mesa),
-                    id_estado_mesa: parseInt(estado_mesa),
+                    estado_mesa: parseInt(estado_mesa),
                     id_empleado: parseInt(id_empleado)
                 },
             });
@@ -48,7 +48,7 @@ export default async function Mesas(
                 data: {
                     capacidad_mesa: parseInt(capacidad_mesa),
                     numero_mesa: parseInt(numero_mesa),
-                    id_estado_mesa: parseInt(estado_mesa),
+                    estado_mesa: parseInt(estado_mesa),
                     id_empleado: parseInt(id_empleado)
                 },
             });

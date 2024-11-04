@@ -30,7 +30,7 @@ export default async function Reservas(
                     id_mesa: parseInt(id_mesa),
                     fecha_hora: new Date(fecha_hora),
                     numero_personas_reserva: parseInt(numero_persona_reservas),
-                    id_confirmacion: confirmacion
+                    confirmacion: confirmacion
 
                 },
             });

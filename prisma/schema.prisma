@@ -40,8 +40,6 @@ model Reservas {
   @@index([fecha_hora])
 }
 
-
-
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
@@ -77,18 +75,8 @@ model Categorias {
   Menu   Menu[]
 }
 
-model Mesas {
-  id Int @id @default(autoincrement())
-  capacidad Int
-  numero Int
-  estado Boolean
-  empleado Empleados @relation(fields: [id_empleado], references: [id])
-  id_empleado Int
-  Pedidos Pedidos[]
-}
-
 model Empleados {
-  id Int @id @default(autoincrement())
+  id_empleado Int @id @default(autoincrement())
   nombre String
   puesto String
   salario Float
@@ -96,17 +84,8 @@ model Empleados {
   Pedidos Pedidos[]
 }
 
-model Reservas {
-  id Int @id @default(autoincrement())
-  id_cliente Int
-  id_mesa Int
-  fecha DateTime
-  numero_personas Int
-  confirmacion Boolean
-}
-
 model Clientes {
-  id Int @id @default(autoincrement())
+  id_cliente Int @id @default(autoincrement())
   nombre String
   telefono String
   email String
