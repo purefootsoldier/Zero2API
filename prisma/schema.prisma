@@ -14,54 +14,110 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  username String @unique
-  password String
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
   createdAt DateTime @default(now())
 }
 
-model Pedido {
-  id_pedido Int @id @default(autoincrement())
-  
+model Menu {
+  id           Int       @id @default(autoincrement())
+  nombre       String
+  descripcion  String
+  precio       Float
+  imagen       String
+  categoria    Categorias @relation(fields: [id_categoria], references: [id])
+  id_categoria Int
+}
 
-  id_mesa Int
-  id_clientes Int
+model Pedidos {
+  id    Int      @id @default(autoincrement())
   fecha DateTime
-  total Float
+  mesa Mesas @relation(fields: [id_mesa], references: [id])
+  id_mesa Int
+  cliente Clientes @relation(fields: [id_cliente], references: [id])
+  id_cliente Int
+  empleado Empleados @relation(fields: [id_empleado], references: [id])
   id_empleado Int
   tipo_pedido String
-  Ticket Ticket[]
-  DetallePedido DetallePedido[]
-
-  Pago Pago[]
 }
-//Guayabo && Alex
+
+model Categorias {
+  id     Int    @id @default(autoincrement())
+  nombre String
+  Menu   Menu[]
+}
+
+model Mesas {
+  id Int @id @default(autoincrement())
+  capacidad Int
+  numero Int
+  estado Boolean
+  empleado Empleados @relation(fields: [id_empleado], references: [id])
+  id_empleado Int
+  Pedidos Pedidos[]
+}
+
+model Empleados {
+  id Int @id @default(autoincrement())
+  nombre String
+  puesto String
+  salario Float
+  Mesa Mesas[]
+  Pedidos Pedidos[]
+}
+
+model Reservas {
+  id Int @id @default(autoincrement())
+  id_cliente Int
+  id_mesa Int
+  fecha DateTime
+  numero_personas Int
+  confirmacion Boolean
+}
+
+model Clientes {
+  id Int @id @default(autoincrement())
+  nombre String
+  telefono String
+  email String
+  Pedidos Pedidos[]
+}
+
+model Permisos {
+  id Int @id @default(autoincrement())
+  nombre String
+  descripcion String
+}
+
 model Ticket {
   id_ticket Int @id @default(autoincrement())
-
   id_pedido Int 
   pedido Pedido @relation(fields: [id_pedido], references: [id_pedido] )
-
   id_metodo_pago Int
   metododo_pago Metodo_Pago @relation(fields: [id_metodo_pago], references: [id_metodo_pago])
-
   total Float
 }
 
-//Diego y Nata
+model Ticket {
+  id_ticket Int @id @default(autoincrement())
+  id_pedido Int 
+  pedido Pedido @relation(fields: [id_pedido], references: [id_pedido] )
+  id_metodo_pago Int
+  metododo_pago Metodo_Pago @relation(fields: [id_metodo_pago], references: [id_metodo_pago])
+  total Float
+}
+
 model DetallePedido {
   id_detalle_pedido Int @id @default(autoincrement())
   id_pedido         Int
   id_menu           Int
   cantidad          Int
   subtotal          Float
-
   Pedido Pedido @relation(fields: [id_pedido], references: [id_pedido])
-  Menu    Menu    @relation(fields: [id_menu], references: [id_menu])
-
+  Menu   Menu  @relation(fields: [id_menu], references: [id_menu])
 }
 
-//Boston y Alek
 model Pago {
     id             Int           @id @default(autoincrement())
     pedido        Pedido       @relation(fields: [id_pedido], references: [id_pedido])
@@ -70,7 +126,6 @@ model Pago {
     id_metodo_pago Int
     fecha_pago     DateTime      @default(now())
     total          Float
-
 }
 
 model Menu {
@@ -84,9 +139,8 @@ model Metodo_Pago {
   Ticket Ticket[]
   nombre String?
   tipo String
-
   Pago Pago[]
-=======
+}
 
 model Producto {
   id Int  @id @default(autoincrement())

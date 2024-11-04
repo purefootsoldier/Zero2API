@@ -1,7 +1,7 @@
 import type {  NextApiRequest, NextApiResponse } from "next";
-import bcypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from "@prisma/client";
+import bcypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -27,8 +27,7 @@ export default async function handler(
     if (method == 'POST'){
         const { username, password } = req.body;
 
-        //Buscar el usuario en la base de datos (es un arreglo en esta caso)
-        //const userBd = users.find((u) => u.username === username);
+
         const user = await prisma.user.findUnique({
             where: {username},
         });
@@ -47,7 +46,7 @@ export default async function handler(
 
         //Generamos el token JWT
         const token = jwt.sign(
-            {userId: user.id, username: user.username},
+            {userId: user.id, username: user.username, password: password},
             process.env.JWT_SECRET as string,
             {expiresIn: '1h'}
         );
