@@ -13,14 +13,140 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Mesas {
+  id_mesa Int @id @default(autoincrement())
+  capacidad_mesa Int @db.UnsignedInt
+  numero_mesa Int @unique
+  estado_mesa Int @db.TinyInt // 0: Available, 1: Reserved, 2: Occupied
+  id_empleado Int
+  empleado Empleados @relation(fields: [id_empleado], references: [id_empleados])
+  reservas Reservas[]
+  Pedidos Pedidos[]
+  @@index([id_empleado])
+}
+
+
+model Reservas {
+  id_reservas Int @id @default(autoincrement())
+  id_cliente Int
+  id_mesa Int
+  fecha_hora DateTime @db.Timestamp()
+  numero_personas_reserva Int @db.UnsignedInt
+  confirmacion Int @db.TinyInt // 0: Pending, 1: Confirmed, 2: Cancelled
+  mesa Mesas @relation(fields: [id_mesa], references: [id_mesa])
+  cliente Cliente @relation(fields: [id_cliente], references: [id_clientes])
+  @@index([id_mesa])
+  @@index([id_cliente])
+  @@index([fecha_hora])
+}
+
 model User {
-  id Int @id @default(autoincrement())
-  username String @unique
-  password String
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
   createdAt DateTime @default(now())
+
+}
+
+model Menu {
+  id           Int       @id @default(autoincrement())
+  nombre       String
+  descripcion  String
+  precio       Float
+  imagen       String
+  categoria    Categorias @relation(fields: [id_categoria], references: [id])
+  id_categoria Int
+}
+
+model Pedidos {
+  id    Int      @id @default(autoincrement())
+  fecha DateTime
+  mesa Mesas @relation(fields: [id_mesa], references: [id])
+  id_mesa Int
+  cliente Clientes @relation(fields: [id_cliente], references: [id])
+  id_cliente Int
+  empleado Empleados @relation(fields: [id_empleado], references: [id])
+  id_empleado Int
+  tipo_pedido String
+}
+
+model Categorias {
+  id     Int    @id @default(autoincrement())
+  nombre String
+  Menu   Menu[]
+}
+
+model Empleados {
+  id_empleado Int @id @default(autoincrement())
+  nombre String
+  puesto String
+  salario Float
+  Mesa Mesas[]
+  Pedidos Pedidos[]
+}
+
+model Clientes {
+  id_cliente Int @id @default(autoincrement())
+  nombre String
+  telefono String
+  email String
+  Pedidos Pedidos[]
+}
+
+model Permisos {
+  id Int @id @default(autoincrement())
+  nombre String
+  descripcion String
+}
+
+model Ticket {
+  id_ticket Int @id @default(autoincrement())
+  id_pedido Int 
+  pedido Pedido @relation(fields: [id_pedido], references: [id_pedido] )
+  id_metodo_pago Int
+  metododo_pago Metodo_Pago @relation(fields: [id_metodo_pago], references: [id_metodo_pago])
+  total Float
+}
+
+model Ticket {
+  id_ticket Int @id @default(autoincrement())
+  id_pedido Int 
+  pedido Pedido @relation(fields: [id_pedido], references: [id_pedido] )
+  id_metodo_pago Int
+  metododo_pago Metodo_Pago @relation(fields: [id_metodo_pago], references: [id_metodo_pago])
+  total Float
+}
+
+model DetallePedido {
+  id_detalle_pedido Int @id @default(autoincrement())
+  id_pedido         Int
+  id_menu           Int
+  cantidad          Int
+  subtotal          Float
+  Pedido Pedido @relation(fields: [id_pedido], references: [id_pedido])
+  Menu   Menu  @relation(fields: [id_menu], references: [id_menu])
+}
+
+model Pago {
+    id             Int           @id @default(autoincrement())
+    pedido        Pedido       @relation(fields: [id_pedido], references: [id_pedido])
+    id_pedido      Int
+    metodo_pago    Metodo_Pago  @relation(fields: [id_metodo_pago], references: [id_metodo_pago])
+    id_metodo_pago Int
+    fecha_pago     DateTime      @default(now())
+    total          Float
+}
+
+model Metodo_Pago {
+  id_metodo_pago Int @id @default(autoincrement())
+  Ticket Ticket[]
+  nombre String?
+  tipo String
+  Pago Pago[]
 }
 
 model Producto {
+
   id Int  @id @default(autoincrement())
   nombre String
   descripcion String
@@ -29,4 +155,24 @@ model Producto {
   cantidad Int @default(0)
 + @@check(cantidad >= 0)
   createAt DateTime @default(now())
+
+}
+
+model Ordenes_cocina{
+
+  id_ordenes_cocina Int @id @default(autoincrement())
+  pedido pedidos @relation(fields: [id_pedidos], references: [id_pedidos])
+  id_pedidos Int 
+  menu menu @relation(fields: [id_menu], references: [id_menu])
+  id_menu Int 
+  cantidad Int 
+  estado Boolean
+
+}
+
+model Empleados { 
+  id_empleado Int @id @default(autoincrement())
+  nombre String
+  puesto String 
+  salario Float 
 }
