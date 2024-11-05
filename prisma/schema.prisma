@@ -13,6 +13,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Mesas {
+  id_mesa Int @id @default(autoincrement())
+  capacidad_mesa Int @db.UnsignedInt
+  numero_mesa Int @unique
+  estado_mesa Int @db.TinyInt // 0: Available, 1: Reserved, 2: Occupied
+  id_empleado Int
+  empleado Empleados @relation(fields: [id_empleado], references: [id_empleados])
+  reservas Reservas[]
+  Pedidos Pedidos[]
+  @@index([id_empleado])
+}
+
+
+model Reservas {
+  id_reservas Int @id @default(autoincrement())
+  id_cliente Int
+  id_mesa Int
+  fecha_hora DateTime @db.Timestamp()
+  numero_personas_reserva Int @db.UnsignedInt
+  confirmacion Int @db.TinyInt // 0: Pending, 1: Confirmed, 2: Cancelled
+  mesa Mesas @relation(fields: [id_mesa], references: [id_mesa])
+  cliente Cliente @relation(fields: [id_cliente], references: [id_clientes])
+  @@index([id_mesa])
+  @@index([id_cliente])
+  @@index([fecha_hora])
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
@@ -49,18 +76,8 @@ model Categorias {
   Menu   Menu[]
 }
 
-model Mesas {
-  id Int @id @default(autoincrement())
-  capacidad Int
-  numero Int
-  estado Boolean
-  empleado Empleados @relation(fields: [id_empleado], references: [id])
-  id_empleado Int
-  Pedidos Pedidos[]
-}
-
 model Empleados {
-  id Int @id @default(autoincrement())
+  id_empleado Int @id @default(autoincrement())
   nombre String
   puesto String
   salario Float
@@ -68,17 +85,8 @@ model Empleados {
   Pedidos Pedidos[]
 }
 
-model Reservas {
-  id Int @id @default(autoincrement())
-  id_cliente Int
-  id_mesa Int
-  fecha DateTime
-  numero_personas Int
-  confirmacion Boolean
-}
-
 model Clientes {
-  id Int @id @default(autoincrement())
+  id_cliente Int @id @default(autoincrement())
   nombre String
   telefono String
   email String
