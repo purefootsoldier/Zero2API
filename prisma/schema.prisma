@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -18,6 +18,7 @@ model User {
   username  String   @unique
   password  String
   createdAt DateTime @default(now())
+
 }
 
 model Menu {
@@ -128,12 +129,6 @@ model Pago {
     total          Float
 }
 
-model Menu {
-  id_menu Int @id @default(autoincrement())
-  DetallePedido DetallePedido[]
-}
-
-
 model Metodo_Pago {
   id_metodo_pago Int @id @default(autoincrement())
   Ticket Ticket[]
@@ -143,10 +138,31 @@ model Metodo_Pago {
 }
 
 model Producto {
+
   id Int  @id @default(autoincrement())
   nombre String
   descripcion String
   precio Float
   stock Int
   createAt DateTime @default(now())
+
+}
+
+model Ordenes_cocina{
+
+  id_ordenes_cocina Int @id @default(autoincrement())
+  pedido pedidos @relation(fields: [id_pedidos], references: [id_pedidos])
+  id_pedidos Int 
+  menu menu @relation(fields: [id_menu], references: [id_menu])
+  id_menu Int 
+  cantidad Int 
+  estado Boolean
+
+}
+
+model Empleados { 
+  id_empleado Int @id @default(autoincrement())
+  nombre String
+  puesto String 
+  salario Float 
 }
