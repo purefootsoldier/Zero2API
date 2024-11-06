@@ -1,9 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next"; 
+
+import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-const IVA_Rate = 0.16;
-
+const IVA_Rate = 16;
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -26,8 +26,8 @@ export default async function handler(
     }
 
     try {
-      const pedido = await prisma.pedido.findUnique({ where: { id_pedido: parseInt(id_pedido) } });
-      const menu = await prisma.menu.findUnique({ where: { id_menu: parseInt(id_menu) } });
+      const pedido = await prisma.pedidos.findUnique({ where: { id: parseInt(id_pedido) } });
+      const menu = await prisma.menu.findUnique({ where: { id: parseInt(id_menu) } });
 
       if (!pedido) {
         return res.status(404).json({ message: 'Pedido no encontrado' });
@@ -41,13 +41,12 @@ export default async function handler(
 
       const iva = subtotalSinIva * IVA_Rate;
       const subtotalConIva = subtotalSinIva + iva;
-
       const newDetallePedido = await prisma.detallePedido.create({
         data: {
           id_pedido: parseInt(id_pedido),
           id_menu: parseInt(id_menu),
           cantidad: parseInt(cantidad),
-          subtotal: subtotalConIva, iva
+          subtotal: subtotalConIva, 
         },
       });
       res.status(201).json(newDetallePedido);
