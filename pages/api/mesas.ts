@@ -17,30 +17,6 @@ export default async function Mesas(
             res.status(500).json({message:'Error al obtener las mesas', error});
         }
     } else if (req.method === 'POST'){
-        
-        const { numero, is_temp  } = req.body
-        //aqui poner un if is temp entonces que se ejecute esto
-        try{
-            const mesa = await prisma.mesa.create({
-                data:{
-                    numero_mesa: numero,
-                    estado_mesa: 2
-                },
-            })
-
-            //programamos la mesa para que se elimine automaticamente en cierto tiempo
-            setTimeout(async () => {
-                await prisma.mesa.delete({
-                    where: { id: mesa.id },
-                })
-                console.log('mesa ${mesa.id} eliminada automaticamente')
-            }, 1000 * 60 * 60) //eliminará la mesa en una hora
-        } catch{
-
-        }
-
-        //aqui el else y se ejecuta lo de abajo
-
         const { capacidad_mesa, numero_mesa, estado_mesa, id_empleado } = req.body;
         if (!capacidad_mesa || !numero_mesa || !estado_mesa || !id_empleado){
             return res.status(400).json({message: 'Faltan campos requeridos'})
