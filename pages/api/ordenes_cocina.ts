@@ -28,9 +28,34 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       return updateOrder(req, res);
     case 'DELETE':
       return deleteOrder(req, res);
+    case 'PATCH':
+      return updateStatusOrder(req, res);
     default:
       res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
       res.status(405).end(`Method ${req.method} Not Allowed`); 
+  }
+}
+
+async function updateStatusOrder(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;
+  const { estado } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ message: 'El id de la orden es requerido' });
+  }
+
+  if (!estado) {
+    return res.status(400).json({ message: 'El estado de la orden es requerido' });
+  }
+
+  try {
+    const updatedOrder = await prisma.ordenes_cocina.update({
+      where: { id_ordenes_cocina: parseInt(id as string) },
+      data: { estado: estado },
+    });
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el estado de la orden', error });
   }
 }
 
@@ -79,7 +104,7 @@ async function updateOrder(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     const updatedOrder = await prisma.ordenes_cocina.update({
-      where: { id_ordenes_cocina: parseInt(id as string) },
+      where: { id_ordenes_cocina: id },
       data: {
         ...(id_pedidos && { id_pedidos: parseInt(id_pedidos) }),
         ...(id_menu && { id_menu: parseInt(id_menu) }),
