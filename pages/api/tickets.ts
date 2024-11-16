@@ -33,15 +33,22 @@ export default async function name(
                                 },
                                 DetallePedido: {
                                     select: {
-                                        cantidad: true,
-                                        subtotal: true
+                                        subtotal: true,
+                                        Menu: {
+                                            select: {
+                                                nombre: true, 
+                                                precio: true
+                                            }
+                                        }
                                     }
                                 }
                             },
                         },
                         metodo_pago: {
                             select: {
-                                nombre: true
+                                nombre: true,
+                                cargo_adicional: true,
+
                             }
                         }
                     }
